@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from models.prestamo import PrestamoModel
 
 class PrestamoRepository:
-    def _init_(self, db: Session):
+    def __init__(self, db: Session):
         self.db = db
 
     def crear(self, prestamo: PrestamoModel) -> PrestamoModel:

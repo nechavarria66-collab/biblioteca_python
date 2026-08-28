@@ -5,7 +5,7 @@ from repositories.libro_repository import LibroRepository
 from utils.excepciones import RecursoNoEncontradoException
 
 class LibroService:
-    def _init_(self, db: Session):
+    def __init__(self, db: Session):
         self.libro_repo = LibroRepository(db)
 
     def crear_libro(self, libro_data: LibroCreate) -> LibroModel:

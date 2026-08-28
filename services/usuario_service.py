@@ -5,7 +5,7 @@ from repositories.usuario_repository import UsuarioRepository
 from utils.excepciones import ReglaNegocioException, RecursoNoEncontradoException
 
 class UsuarioService:
-    def _init_(self, db: Session):
+    def __init__(self, db: Session):
         self.usuario_repo = UsuarioRepository(db)
 
     def registrar_usuario(self, usuario_data: UsuarioCreate) -> UsuarioModel:

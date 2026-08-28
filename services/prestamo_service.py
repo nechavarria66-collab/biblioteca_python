@@ -6,7 +6,7 @@ from repositories.usuario_repository import UsuarioRepository
 from utils.excepciones import RecursoNoEncontradoException, ReglaNegocioException
 
 class PrestamoService:
-    def _init_(self, db: Session):
+    def __init__(self, db: Session):
         self.db = db
         self.libro_repo = LibroRepository(db)
         self.usuario_repo = UsuarioRepository(db)

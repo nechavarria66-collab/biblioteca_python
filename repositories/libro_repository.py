@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from models.libro import LibroModel
 
 class LibroRepository:
-    def _init_(self, db: Session):
+    def __init__(self, db: Session):
         self.db = db
 
     def obtener_por_id(self, libro_id: int) -> LibroModel:
