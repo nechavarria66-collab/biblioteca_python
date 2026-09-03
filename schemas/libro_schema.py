@@ -1,4 +1,4 @@
-#Ahora los schemas: libro_schema.py
+# Se importan las clases necesarias de Pydantic para definir los esquemas de datos que se utilizarán en la API
 from pydantic import BaseModel
 
 # Esquema base con los atributos comunes
@@ -15,5 +15,6 @@ class LibroResponse(LibroBase):
     id: int
     disponible: bool
 
+    # Se define la configuración de Pydantic para permitir la lectura de atributos desde objetos SQLAlchemy
     class Config:
         from_attributes = True  # Permite que Pydantic lea datos directamente de SQLAlchemy

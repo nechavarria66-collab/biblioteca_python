@@ -1,5 +1,4 @@
-#schemas/prestamo_schema.py
-
+# Se importan las clases necesarias de Pydantic para definir los esquemas de datos que se utilizarán en la API
 from pydantic import BaseModel
 from datetime import date
 from typing import Optional
