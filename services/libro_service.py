@@ -1,7 +1,7 @@
 # Se importan las clases necesarias de SQLAlchemy y los modelos, esquemas y repositorios relacionados con los libros
 from sqlalchemy.orm import Session
 from models.libro import LibroModel
-from schemas.libro_schema import LibroCreate
+from schemas.libro_schema import LibroCreate, LibroUpdate
 from repositories.libro_repository import LibroRepository
 from utils.excepciones import RecursoNoEncontradoException
 
@@ -29,3 +29,29 @@ class LibroService:
         if not libro:
             raise RecursoNoEncontradoException(f"El libro con ID {libro_id} no fue encontrado.")
         return libro
+
+    def actualizar_libro(self, libro_id: int, libro_data: LibroUpdate) -> LibroModel:
+        # 1. Verificar si el libro existe
+        libro = self.libro_repo.obtener_por_id(libro_id)
+        if not libro:
+            raise RecursoNoEncontradoException(f"El libro con ID {libro_id} no fue encontrado.")
+
+        # 2. Actualizar los campos del libro con los datos proporcionados
+        if libro_data.titulo is not None:
+            libro.titulo = libro_data.titulo
+        if libro_data.autor is not None:
+            libro.autor = libro_data.autor
+        if libro_data.disponible is not None:
+            libro.disponible = libro_data.disponible
+
+        # 3. Guardar cambios en la base de datos MySQL
+        return self.libro_repo.actualizar(libro)   
+
+    def eliminar_libro(self, libro_id: int) -> None:
+        # 1. Verificar si el libro existe
+        libro = self.libro_repo.obtener_por_id(libro_id)
+        if not libro:
+            raise RecursoNoEncontradoException(f"El libro con ID {libro_id} no fue encontrado.")
+
+        # 2. Eliminar el libro de la base de datos
+        self.libro_repo.eliminar(libro)    

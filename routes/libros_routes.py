@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from database.conexion import get_db
-from schemas.libro_schema import LibroCreate, LibroResponse
+from schemas.libro_schema import LibroCreate, LibroResponse, LibroUpdate
 from services.libro_service import LibroService
 from utils.excepciones import BibliotecaException
 
@@ -28,5 +28,22 @@ def obtener_libro(libro_id: int, db: Session = Depends(get_db)):
     service = LibroService(db)
     try:
         return service.obtener_por_id(libro_id)
+    except BibliotecaException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.mensaje)
+# Se define la ruta PUT para actualizar un libro existente, que recibe un libro_id y un objeto LibroUpdate
+@router.put("/{libro_id}", response_model=LibroResponse)
+def actualizar_libro(libro_id: int, libro_data: LibroUpdate, db: Session = Depends(get_db)):
+    service = LibroService(db)
+    try:
+        return service.actualizar_libro(libro_id=libro_id, libro_data=libro_data)
+    except BibliotecaException as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=e.mensaje)
+# Se define la ruta DELETE para eliminar un libro existente, que recibe un libro_id y devuelve un código de estado 204 No Content si la eliminación fue exitosa
+@router.delete("/{libro_id}", status_code=status.HTTP_204_NO_CONTENT)
+def eliminar_libro(libro_id: int, db: Session = Depends(get_db)):
+    service = LibroService(db)
+    try:
+        service.eliminar_libro(libro_id)
+        return None  # Al responder 204 No Content no se requiere cuerpo en la respuesta
     except BibliotecaException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.mensaje)

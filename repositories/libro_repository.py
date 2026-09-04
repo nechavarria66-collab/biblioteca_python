@@ -23,3 +23,7 @@ class LibroRepository:
         self.db.commit()
         self.db.refresh(libro)
         return libro
+    # Se define el método eliminar que recibe un objeto libro y lo elimina de la base de datos
+    def eliminar(self, libro: LibroModel) -> None:
+        self.db.delete(libro)
+        self.db.commit()
