@@ -18,3 +18,7 @@ class UsuarioRepository:
         self.db.commit()
         self.db.refresh(usuario)
         return usuario
+
+    # Se define el método listar_todos que devuelve una lista de todos los usuarios registrados en la base de datos
+    def listar_todos(self):
+        return self.db.query(UsuarioModel).all()

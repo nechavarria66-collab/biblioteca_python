@@ -31,3 +31,7 @@ class UsuarioService:
         if not usuario:
             raise RecursoNoEncontradoException(f"El usuario con ID {usuario_id} no fue encontrado.")
         return usuario
+
+    # Se define el método para obtener todos los usuarios, que devuelve una lista de modelos de SQLAlchemy correspondientes a todos los usuarios registrados
+    def obtener_todos(self):
+        return self.usuario_repo.listar_todos()

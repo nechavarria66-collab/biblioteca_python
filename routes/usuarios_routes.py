@@ -26,3 +26,12 @@ def obtener_usuario(usuario_id: int, db: Session = Depends(get_db)):
         return service.obtener_por_id(usuario_id)
     except BibliotecaException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.mensaje)
+
+# Se define la ruta GET para listar todos los usuarios, que devuelve una lista de objetos UsuarioResponse con todos los usuarios registrados
+@router.get("/", response_model=list[UsuarioResponse])
+def listar_usuarios(db: Session = Depends(get_db)):
+    service = UsuarioService(db)
+    try:
+        return service.obtener_todos()
+    except BibliotecaException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.mensaje)
