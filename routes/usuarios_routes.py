@@ -2,9 +2,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from database.conexion import get_db
-from schemas.usuario_schema import UsuarioCreate, UsuarioResponse
+from schemas.usuario_schema import UsuarioCreate, UsuarioResponse, UsuarioUpdate
 from services.usuario_service import UsuarioService
-from utils.excepciones import BibliotecaException
+from utils.excepciones import BibliotecaException, RecursoNoEncontradoException, ReglaNegocioException
 
 # Se crea un enrutador de FastAPI para manejar las rutas relacionadas con los usuarios, con un prefijo "/usuarios" y una etiqueta "Usuarios"
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
@@ -34,4 +34,21 @@ def listar_usuarios(db: Session = Depends(get_db)):
     try:
         return service.obtener_todos()
     except BibliotecaException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.mensaje)
+# Se define la ruta PUT para actualizar un usuario existente, que recibe un usuario_id y un objeto UsuarioUpdate con los datos a actualizar, y devuelve un objeto UsuarioResponse con el usuario actualizado
+@router.put("/{usuario_id}", response_model=UsuarioResponse)
+def actualizar_usuario(usuario_id: int, usuario_data: UsuarioUpdate, db: Session = Depends(get_db)):
+    service = UsuarioService(db)
+    try:
+        return service.actualizar_usuario(usuario_id, usuario_data)
+    except BibliotecaException as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=e.mensaje)
+# Se define la ruta DELETE para eliminar un usuario existente, que recibe un usuario_id y devuelve un código de estado 204 No Content si la eliminación fue exitosa
+@router.delete("/{usuario_id}", status_code=status.HTTP_204_NO_CONTENT)
+def eliminar_usuario(usuario_id: int, db: Session = Depends(get_db)):
+    service = UsuarioService(db)
+    try:
+        service.eliminar_usuario(usuario_id)
+        return None  # Al responder 204 No Content no se requiere cuerpo en la respuesta
+    except RecursoNoEncontradoException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.mensaje)

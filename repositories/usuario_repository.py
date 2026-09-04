@@ -18,7 +18,15 @@ class UsuarioRepository:
         self.db.commit()
         self.db.refresh(usuario)
         return usuario
-
     # Se define el método listar_todos que devuelve una lista de todos los usuarios registrados en la base de datos
     def listar_todos(self):
         return self.db.query(UsuarioModel).all()
+    # Se define el método actualizar que recibe un objeto usuario y actualiza sus datos en la base de datos, luego devuelve el usuario actualizado
+    def actualizar(self, usuario: UsuarioModel) -> UsuarioModel:
+        self.db.commit()
+        self.db.refresh(usuario)
+        return usuario
+    # Se define el método eliminar que recibe un objeto usuario y lo elimina de la base de datos
+    def eliminar(self, usuario: UsuarioModel) -> None:
+        self.db.delete(usuario)
+        self.db.commit()
